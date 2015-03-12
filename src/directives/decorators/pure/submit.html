@@ -1,0 +1,12 @@
+<div class="pure-controls schema-form-submit {{form.htmlClass}}">
+  <input type="submit"
+         class="pure-button {{ form.style || 'pure-button-primary' }} {{form.fieldHtmlClass}}"
+         value="{{form.title}}"
+         ng-disabled="form.readonly"
+         ng-if="form.type === 'submit'">
+  <button class="pure-button {{ form.style || 'pure-button-default' }}"
+          type="button"
+          ng-click="buttonClick($event,form)"
+          ng-disabled="form.readonly"
+          ng-if="form.type !== 'submit'">{{form.title}}</button>
+</div>

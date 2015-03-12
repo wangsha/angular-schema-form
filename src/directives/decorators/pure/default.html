@@ -1,0 +1,24 @@
+<div class="pure-control-group schema-form-{{form.type}} {{form.htmlClass}}"
+     ng-class="{'has-error': hasError(), 'has-success': hasSuccess(), 'has-feedback': form.feedback !== false }">
+  <label ng-class="{'sr-only': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label>
+
+  <input ng-show="form.key"
+         type="{{form.type}}"
+         step="any"
+         sf-changed="form"
+         placeholder="{{form.placeholder}}"
+         class="{{form.fieldHtmlClass}}"
+         id="{{form.key.slice(-1)[0]}}"
+         ng-model-options="form.ngModelOptions"
+         ng-model="$$value$$"
+         ng-disabled="form.readonly"
+         schema-validate="form"
+         name="{{form.key.slice(-1)[0]}}"
+         aria-describedby="{{form.key.slice(-1)[0] + 'Status'}}">
+
+  <span ng-if="hasError() || hasSuccess()"
+        id="{{form.key.slice(-1)[0] + 'Status'}}"
+        class="sr-only">{{ hasSuccess() ? '(success)' : '(error)' }}</span>
+
+  <div class="" sf-message="form.description"></div>
+</div>
