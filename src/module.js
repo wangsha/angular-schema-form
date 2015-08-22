@@ -1,6 +1,7 @@
+'use strict';
+
 // Deps is sort of a problem for us, maybe in the future we will ask the user to depend
 // on modules for add-ons
-
 var deps = [];
 try {
   //This throws an expection if module does not exist.
@@ -20,4 +21,15 @@ try {
   deps.push('angularSpectrumColorpicker');
 } catch (e) {}
 
+
+/**
+ *
+ * @ngdoc module
+ * @name schemaForm
+ * @module schemaForm
+ * @packageName angular-schema-form
+ * @description
+ * Generate forms from a JSON-Schema.
+ *
+ **/
 var schemaForm = angular.module('schemaForm', deps);

@@ -1,3 +1,26 @@
+/**
+ *
+ * @ngdoc directive
+ * @module schemaForm
+ * @name sfField
+ * @restrict A
+ * @description
+ * `sf-field` directive keeps track and exports the canonical form definition object for use in
+ * the template. Usually added to the first element by the `sfField` builder function.
+ *
+ * `sf-field` exports a ngModelController on scope under the name `ngModel`, if
+ * a `schema-validate` directive is used inside the template.
+ *
+ * It also exports a couple of useful functions on scope.
+ *
+ * @param {number} sfField form definition id.
+ *
+ * @usage
+ ```html
+  <div sf-field="0">{{form.title}}</div>
+ ```
+ *
+ **/
 angular.module('schemaForm').directive('sfField',
     ['$parse', '$compile', '$http', '$templateCache', '$interpolate', '$q', 'sfErrorMessage',
      'sfPath','sfSelect',
@@ -5,7 +28,7 @@ angular.module('schemaForm').directive('sfField',
              sfPath, sfSelect) {
 
       return {
-        restrict: 'AE',
+        restrict: 'A',
         replace: false,
         transclude: false,
         scope: true,
@@ -25,18 +48,49 @@ angular.module('schemaForm').directive('sfField',
           },
           post: function(scope, element, attrs, sfSchema) {
             //Keep error prone logic from the template
+
+            /**
+             *
+             * @ngdoc method
+             * @name sfField#showTitle
+             * @return {boolean} `true` if title should be shown.
+             * @description
+             * Shorthand for checking title options.
+             *
+             **/
             scope.showTitle = function() {
               return scope.form && scope.form.notitle !== true && scope.form.title;
             };
 
+            /**
+             *
+             * @ngdoc method
+             * @name sfField#listToCheckboxValues
+             * @param {Array} a list of strings
+             * @return {Object} where property is a string and its value always `true`
+             * @description
+             * Converts a list of values to a mapping Object, used in checkboxes.
+             *
+             **/
             scope.listToCheckboxValues = function(list) {
-              var values = {};
+              var values = Object.create(null);
               angular.forEach(list, function(v) {
                 values[v] = true;
               });
               return values;
             };
 
+            /**
+             *
+             * @ngdoc method
+             * @name sfField#checkboxValuesToList
+             * @param {Object} values Property is the name of the checkbox and value is a boolean.
+             * @return {Array} a list of strings comprised of all object properties that have a
+             *                 "thruty" value.
+             * @description
+             * Converts a list of values to a mapping Object, used in checkboxes.
+             *
+             **/
             scope.checkboxValuesToList = function(values) {
               var lst = [];
               angular.forEach(values, function(v, k) {
@@ -47,6 +101,19 @@ angular.module('schemaForm').directive('sfField',
               return lst;
             };
 
+            /**
+             *
+             * @ngdoc method
+             * @name sfField#buttonClick
+             * @param {Object} $event Event from a `ng-click`
+             * @param {Object} form A form object with a potential `onClick` option.
+             * @description
+             * Logic to handle the `onClick` option, primarily for buttons. It checks the form,
+             * if a `onClick` option is found and has a function as a value it is called with the
+             * arguments `$event` and `form`. If the `onClick` is a string it is evaluated in the
+             * parent scope of the `sf-schema` directive.
+             *
+             **/
             scope.buttonClick = function($event, form) {
               if (angular.isFunction(form.onClick)) {
                 form.onClick($event, form);
