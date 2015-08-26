@@ -1,5 +1,15 @@
+'use strict';
 
-// FIXME: type template (using custom builder)
+/**
+ *
+ * @ngdoc provider
+ * @module schemaForm
+ * @name sfBuilderProvider
+ * @description
+ *
+ * This provider contains some useful builder functions on the object property `builders`
+ *
+ **/
 angular.module('schemaForm').provider('sfBuilder', ['sfPathProvider', function(sfPathProvider) {
 
   var SNAKE_CASE_REGEXP = /[A-Z]/g;
@@ -11,7 +21,23 @@ angular.module('schemaForm').provider('sfBuilder', ['sfPathProvider', function(s
   };
   var formId = 0;
 
+    /**
+     * @ngdoc property
+     * @name sfBuilderProvider#builders
+     * @description
+     * The `builders` property is an object with a couple of useful builders.
+     **/
   var builders = {
+
+    /**
+     * @ngdoc method
+     * @name sfBuilderProvider#builders.sfField
+     * @param {Object} args Builder functions arguments object.
+     * @description
+     * The sfField builder adds the {@link sfField sfField} to the *first child* in the template.
+     * You need this builder if you wan't to access the form on scope.
+     *
+     **/
     sfField: function(args) {
       args.fieldFrag.firstChild.setAttribute('sf-field', formId);
 
@@ -19,6 +45,23 @@ angular.module('schemaForm').provider('sfBuilder', ['sfPathProvider', function(s
       args.lookup['f' + formId] = args.form;
       formId++;
     },
+    /**
+     *
+     * @ngdoc method
+     * @name sfBuilderProvider#builders.ngModel
+     * @param {Object} args Builder functions arguments object.
+     * @description
+     * The ngModel builder tries to make sure your template gets a proper `ngModel` binding.
+     * It does this by quering the template for any element with the `sf-field-model` attribute.
+     * Depedning on the value of the attribute its does some different things.
+     *
+     * | Attribute value | And it does... |
+     * |:----------------|:---------------|
+     * | Empty or ""     | Adds a `ng-model` to the element. |
+     * | "replaceAll"    | Loops over all attributes of the element and replaces all instances of `$$value$$` in their respective values. Does not add a `ng-model` attribute. |
+     * | Any other value | Check the element for an attribute by that name and sets the value of that attribute to a proper model binding (as `ng-model`needs). |
+     *
+     **/
     ngModel: function(args) {
       if (!args.form.key) {
         return;
